@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"> 
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+<!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+  </head>
+
+<body ng-app="CurrencyApp" ng-controller='CurrencyCtrl'>
+
+
+<div class="jumbotron text-center">
+  <div class="col-md-12 "><h1 class="mb-2">Currency Converter</h1></div>
+  <div class="col-md-12 row text-center d-flex justify-content-center">
+  	<div class="col-md-3">
+  	 <div class="form-group">
+  <label for="sel1">Convert From</label>
+  <select class="form-control" id="sel1" ng-model="from">
+    <option ng-repeat="x in currencies.results"><% x.currencyName %> <strong> (<% x.id %>)</strong></option>
+   
+  </select>
+</div></div>
+
+    <div class="col-md-3">
+    <div class="form-group">
+  <label for="sel1">Convert To</label>
+  <select class="form-control" id="sel1" ng-model="to">
+   <option ng-repeat="x in currencies.results" value="<% x.id %>"><% x.currencyName %> (<% x.id %>)</option>
+   
+  </select>
+</div></div>
+
+  </div> 
+
+  <div class="col-md-12 row text-center d-flex justify-content-center">
+  
+    <div class="input-group mb-3 col-md-4">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Amount</span>
+      </div>
+      <input type="number" class="form-control" placeholder="Enter Amount"  name="email" step=0.1>
+    </div>
+
+    <div>
+<button type="button" class="btn btn-primary" ng-click="convert()">Convert</button>
+</div>
+
+     </div>
+</div>
+ 
+ 
+
+<div class="text-center">
+
+  <h1 class="display-3">GHS 100.00 <% from %> <% to %> </h1>
+</div>
+
+<script type="text/javascript">
+	//sessionStorage.clear();
+ 
+
+
+ var app = angular.module('CurrencyApp', [], function($interpolateProvider) {
+          $interpolateProvider.startSymbol('<%');
+          $interpolateProvider.endSymbol('%>');
+      });
+
+
+app.controller('CurrencyCtrl', ['$scope','$http','$timeout',function($scope,$http,$timeout) {
+
+  
+  $http.get("https://free.currencyconverterapi.com/api/v5/currencies")
+    .then(function(response) {
+
+        $scope.currencies = response.data;
+        
+
+    });
+
+ $scope.convert=function()
+  {
+    
+    console.log("here");
+
+ // $http.get("{{url('api/get_details')}}"+'/'+id)
+ //    .then(function(response) {
+
+ //        $scope.data = response.data;
+       
+
+ //    });
+
+}
+
+
+}]);
+
+
+
+</script>
+
+</body>
+</html>
