@@ -31,7 +31,7 @@
   	 <div class="form-group">
   <label for="sel1">Convert From</label>
   <select class="form-control" id="sel1" ng-model="from">
-    <option ng-repeat="x in currencies.results"><% x.currencyName %> <strong> (<% x.id %>)</strong></option>
+    <option ng-repeat="x in currencies.results" value="<% x.id %>"><% x.currencyName %> <strong> (<% x.id %>)</strong></option>
    
   </select>
 </div></div>
@@ -53,7 +53,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text">Amount</span>
       </div>
-      <input type="number" class="form-control" placeholder="Enter Amount"  name="email" step=0.1>
+      <input type="number" class="form-control" placeholder="Enter Amount"  name="email" step=0.1 ng-model="amount">
     </div>
 
     <div>
@@ -67,7 +67,7 @@
 
 <div class="text-center">
 
-  <h1 class="display-3">GHS 100.00 <% from %> <% to %> </h1>
+  <h1 class="display-3"> <% key %> <% total|currency:" " %></h1>
 </div>
 
 <script type="text/javascript">
@@ -83,7 +83,8 @@
 
 app.controller('CurrencyCtrl', ['$scope','$http','$timeout',function($scope,$http,$timeout) {
 
-  
+   $scope.total="0.00";
+
   $http.get("https://free.currencyconverterapi.com/api/v5/currencies")
     .then(function(response) {
 
@@ -95,15 +96,16 @@ app.controller('CurrencyCtrl', ['$scope','$http','$timeout',function($scope,$htt
  $scope.convert=function()
   {
     
-    console.log("here");
+    //console.log("here"+$scope.from + $scope.to);
+   
+   $scope.key=$scope.from+"_"+$scope.to;
+ $http.get("https://free.currencyconverterapi.com/api/v5/convert?q="+$scope.key+"&compact=y")
+    .then(function(response) {
 
- // $http.get("{{url('api/get_details')}}"+'/'+id)
- //    .then(function(response) {
+      $scope.total =$scope.amount * response.data[$scope.key].val;
+    
 
- //        $scope.data = response.data;
-       
-
- //    });
+    });
 
 }
 
